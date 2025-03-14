@@ -4,6 +4,7 @@
 ## Updates 
 - This game will have a chapter-based update system, where each update is a new chapter with new content that expands on the existing story and brings new things to do.
 - It will be updated at the developer's will. Not scheduled
+- Our chapter 1 release has about 2700 lines of code!
 ## Bugs
 - This game will probably have a few bugs you find
 - Most are fixed by reopening the game, be patient, this game is a lot more work than it looks like
