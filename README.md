@@ -1,7 +1,12 @@
 # Hollow Sun
 
 *Hollow Sun* is a console-based post-apocalyptic RPG where players navigate a ruined world filled with secrets, challenges, and strategic decisions. The game features a branching narrative, characters, and exploration in a Post-Apocalyptic wasteland.
-
+## Updates 
+- This game will have a chapter-based update system, where each update is a new chapter with new content that expands on the existing story and brings new things to do.
+- It will be updated at the developer's will. Not scheduled
+## Bugs
+- This game will probably have a few bugs you find
+- Most are fixed by reopening the game, be patient, this game is a lot more work than it looks like
 ## Features
 
 - **Post-apocalyptic world**: Explore a world that has been devastated by an unspecified catastrophe.
