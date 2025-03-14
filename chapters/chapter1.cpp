@@ -437,7 +437,7 @@ void vulturesCirclingScenario() {
     getKeyPress();
     vultureSite();
   } else {
-    std::cout << "You decide it's best to stay away. Whatever is attracting "
+    std::cout << "You decide its best to stay away. Whatever is attracting "
                  "the vultures, it's none of your concern.\n";
     std::cout
         << "You turn back, keeping your distance from whatever lies ahead.\n";
@@ -593,7 +593,7 @@ void searchCamp() {
 void headTowardsSmokePlume() {
   bool looted = SaveManager::hasVisitedLocation("empty camp");
   if (looted) {
-    std::cout << "You've already visited. Nothing more to see.\n";
+    std::cout << "Youve already visited. Nothing more to see.\n";
     std::cout << "Press any key to continue... ";
     getKeyPress();
     emergeFromBunkerHandling();
@@ -734,7 +734,7 @@ void abandonedMilitaryCheckpoint() {
                "nearly deserted, but a man sits by a makeshift terminal.\n";
   std::cout << "\"You're carrying something interesting,\" he says, eyeing "
                "your bag. \"I can decrypt those Important_Files for you.\"\n";
-  std::cout << "\"In exchange, I'll give you $500 and let you through the "
+  std::cout << "\"In exchange, Ill give you $500 and let you through the "
                "checkpoint. Deal?\"\n";
 
   while (selecting) {
@@ -818,7 +818,7 @@ void findSurvivor() {
   if (choice == 0) {
     std::cout << "You move through the ruins, carefully stepping over rubble "
                  "and broken glass...\n";
-    std::cout << "The voice calls again, closer now. You're getting there.\n";
+    std::cout << "The voice calls again, closer now. Youre getting there.\n";
     std::cout << "Finally, you turn a corner and find the survivor.";
     std::cout << "Press any key to continue... ";
     getKeyPress();
@@ -842,15 +842,15 @@ void findSurvivor() {
     std::cout << "\"At first, folks tried to help each other. Neighborhoods "
                  "turned into little\n";
     std::cout << "communities, sharing what they had. But when things got "
-                 "bad—when the hunger\n";
-    std::cout << "and sickness spread—kindness went out the window.\"\n";
+                 "bad-when the hunger\n";
+    std::cout << "and sickness spread-kindness went out the window.\"\n";
     std::cout << "Their voice hardens. \"People did things... horrible things. "
                  "Things they never\n";
     std::cout << "thought they'd be capable of.\"\n\n";
 
     std::cout << "The survivor looks at you, their expression unreadable.\n";
-    std::cout << "\"I don't know how you're still standing, but if you're "
-                 "smart, you won’t trust\n";
+    std::cout << "\"I don't know how you're still standing, but if youre "
+                 "smart, you wont trust\n";
     std::cout << "anyone too easily. People will do whatever it takes to "
                  "survive.\"\n";
 
@@ -864,7 +864,7 @@ void findSurvivor() {
     
   } else if (choice == 1) {
     std::cout << "You find an old fire escape and climb up to a rooftop.\n";
-    std::cout << "From here, you see movement in the distance—someone is out "
+    std::cout << "From here, you see movement in the distance-someone is out "
                  "there.\n";
     std::cout << "Press any key to continue... ";
     getKeyPress();
@@ -896,7 +896,7 @@ void yellOut() {
 
   } else {
     std::cout << "For a moment, there's nothing but the howl of the wind...\n";
-    std::cout << "Then—faintly, in the distance—a voice calls back.\n";
+    std::cout << "Then-faintly, in the distance-a voice calls back.\n";
     std::cout << "Someone is out there. You need to find them.\n";
     std::cout << "Press any key to continue... ";
     getKeyPress();
@@ -1143,7 +1143,7 @@ void openLiquorStoreMenu() {
 void ashenfallLiquorStore() {
   clearConsole();
   std::cout << "From the outside, the liquor store looks like every other ruin "
-               "in the city—windows shattered, sign barely hanging on.\n";
+               "in the city-windows shattered, sign barely hanging on.\n";
   std::cout << "You step inside, expecting decay and emptiness...\n";
   std::cout << "But to your surprise, the interior is clean. The shelves are "
                "stocked. The air smells of aged wood and faint whiskey.\n";
@@ -1317,7 +1317,7 @@ void abandonedComputerLab() {
 
     } else {
       std::cout
-          << "\nYou don't have the Encrypted Data Chip. You cannot unlock "
+          << "\nYou dont have the Encrypted Data Chip. You cannot unlock "
              "the computer.\n";
       std::cout << "You turn back and return to the post-apocalyptic world.\n";
       std::cout << "Press any key to continue... ";
