@@ -1,9 +1,9 @@
 #ifdef _WIN32
-#include <conio.h> 
+#include <conio.h>
 #include <windows.h>
 #else
-#include <termios.h> 
-#include <unistd.h>  
+#include <termios.h>
+#include <unistd.h>
 #endif
 #include "../credits.h"
 #include "../save.h"
@@ -15,21 +15,20 @@
 static bool hasLooted = false;
 void emergeFromBunkerHandling();
 void vultureSite() {
-  int choice = 0; 
+  int choice = 0;
   char input;
   SaveManager::loadVisitedLocations();
-  
+
   if (SaveManager::hasVisitedLocation("vultureSite")) {
     std::cout
         << "You find a long-dead man, but his body has already been looted.\n";
     std::cout << "Press enter to leave.\n";
-    input = getchar(); 
+    input = getchar();
     if (input == '\n') {
       emergeFromBunkerHandling();
-      SaveManager::saveVisitedLocation(
-          "vultureSite"); 
+      SaveManager::saveVisitedLocation("vultureSite");
     }
-    return; 
+    return;
   }
 
 #ifdef _WIN32
@@ -40,85 +39,79 @@ void vultureSite() {
     std::cout << (choice == 0 ? "> Loot his body\n" : "  Loot his body\n");
     std::cout << (choice == 1 ? "> Leave him be\n" : "  Leave him be\n");
 
-    input = _getch(); 
+    input = _getch();
 
     if (input == 'w' || input == 'W') {
-      choice = (choice == 0) ? 1 : 0; 
+      choice = (choice == 0) ? 1 : 0;
     } else if (input == 's' || input == 'S') {
-      choice = (choice == 1) ? 0 : 1; 
-    } else if (input == '\r') {       
+      choice = (choice == 1) ? 0 : 1;
+    } else if (input == '\r') {
       if (choice == 0) {
         std::cout << "You decide to loot the body... you get $100.\n";
         SaveManager::money += 100;
-        SaveManager::saveGame("save.txt"); 
-        hasLooted = true;                 
-        SaveManager::saveVisitedLocation(
-            "vultureSite"); 
+        SaveManager::saveGame("save.txt");
+        hasLooted = true;
+        SaveManager::saveVisitedLocation("vultureSite");
         std::cout << "You now have " << SaveManager::money << " dollars.\n";
         std::cout << "Press enter to continue... ";
         getKeyPress();
         emergeFromBunkerHandling();
-        SaveManager::saveGame("save.txt"); 
-        break; 
+        SaveManager::saveGame("save.txt");
+        break;
       } else if (choice == 1) {
-        emergeFromBunkerHandling(); 
-        SaveManager::saveVisitedLocation(
-            "vultureSite");               
-        SaveManager::saveGame("save.txt"); 
-        break;                             
+        emergeFromBunkerHandling();
+        SaveManager::saveVisitedLocation("vultureSite");
+        SaveManager::saveGame("save.txt");
+        break;
       }
     }
-    Sleep(100); 
+    Sleep(100);
   }
 #else
   struct termios old_tio, new_tio;
 
-  tcgetattr(STDIN_FILENO, &old_tio);         
-  new_tio = old_tio;                          
-  new_tio.c_lflag &= ~(ICANON | ECHO);        
-  new_tio.c_cc[VMIN] = 1;                     
-  new_tio.c_cc[VTIME] = 0;                    
-  tcsetattr(STDIN_FILENO, TCSANOW, &new_tio); 
+  tcgetattr(STDIN_FILENO, &old_tio);
+  new_tio = old_tio;
+  new_tio.c_lflag &= ~(ICANON | ECHO);
+  new_tio.c_cc[VMIN] = 1;
+  new_tio.c_cc[VTIME] = 0;
+  tcsetattr(STDIN_FILENO, TCSANOW, &new_tio);
 
   while (true) {
-    system("clear"); 
+    system("clear");
 
-   
     std::cout << "You find a long-dead man. What do you do?\n";
     std::cout << (choice == 0 ? "> Loot his body\n" : "  Loot his body\n");
     std::cout << (choice == 1 ? "> Leave him be\n" : "  Leave him be\n");
 
-   
     input = getchar();
     if (input == 'w' || input == 'W') {
-      choice = (choice == 0) ? 1 : 0; 
+      choice = (choice == 0) ? 1 : 0;
     } else if (input == 's' || input == 'S') {
-      choice = (choice == 1) ? 0 : 1; 
+      choice = (choice == 1) ? 0 : 1;
     } else if (input == '\n') {
       if (choice == 0) {
         std::cout << "You loot the body and find $100.\n";
-        SaveManager::money += 100; 
+        SaveManager::money += 100;
         std::cout << "Your balance is now " << SaveManager::money
                   << " dollars.\n";
-        hasLooted = true; 
-        SaveManager::saveVisitedLocation(
-            "vultureSite"); 
-        SaveManager::saveGame("save.txt"); 
-        break;                             
+        hasLooted = true;
+        SaveManager::saveVisitedLocation("vultureSite");
+        SaveManager::saveGame("save.txt");
+        break;
       } else if (choice == 1) {
-        emergeFromBunkerHandling(); 
-                                  
-        SaveManager::saveVisitedLocation(
-            "vultureSite");                
-        SaveManager::saveGame("save.txt"); 
-        break; 
+        emergeFromBunkerHandling();
+
+        SaveManager::saveVisitedLocation("vultureSite");
+        SaveManager::saveGame("save.txt");
+        break;
       }
     }
 
-    usleep(100000); 
+    usleep(100000);
   }
 
-  tcsetattr(STDIN_FILENO, TCSANOW, &old_tio); 
+  tcsetattr(STDIN_FILENO, TCSANOW, &old_tio);
 #endif
 }
 void attemptToLeave() {
@@ -133,7 +126,6 @@ void attemptToLeave() {
   std::cout
       << "Something is keeping you here. You must find a way to escape...\n";
 
-  
   if (SaveManager::inventory.find("Mysterious Key") !=
       SaveManager::inventory.end()) {
     std::cout << "\nYou feel a strange pull in your pocket. The Mysterious "
@@ -144,8 +136,8 @@ void attemptToLeave() {
     std::cout << "You successfully escape from this area.\n";
     std::cout << "Press enter to continue... ";
     getKeyPress();
-    
     emergeFromBunkerHandling();
+    return;
   }
 
   std::cout << "Press any key to continue...";
@@ -159,9 +151,9 @@ void exploreSketchyBuilding() {
     std::cout << "You have already explored the Sketchy Building. Nothing new "
                  "to see here.\n";
     std::cout << "Press any key to continue...\n";
-    getKeyPress();           
+    getKeyPress();
     investigateNearbyRuins();
-    return;                  
+    return;
   }
 
   const int numOptions = 2;
@@ -174,8 +166,7 @@ void exploreSketchyBuilding() {
 
     for (int i = 0; i < numOptions; i++) {
       if (i == selected)
-        std::cout << "> " << options[i] << " <"
-                  << std::endl; 
+        std::cout << "> " << options[i] << " <" << std::endl;
       else
         std::cout << "  " << options[i] << std::endl;
     }
@@ -183,10 +174,10 @@ void exploreSketchyBuilding() {
     char input = getKeyPress();
 
     if (input == 'w' || input == 'W') {
-      selected = (selected - 1 + numOptions) % numOptions; 
+      selected = (selected - 1 + numOptions) % numOptions;
     } else if (input == 's' || input == 'S') {
-      selected = (selected + 1) % numOptions;    
-    } else if (input == '\n' || input == '\r') { 
+      selected = (selected + 1) % numOptions;
+    } else if (input == '\n' || input == '\r') {
       break;
     }
   }
@@ -201,14 +192,14 @@ void exploreSketchyBuilding() {
     std::cout << "The building is collapsing!\n";
     std::cout << "Press any key to continue...";
 
-    getKeyPress(); 
-    SaveManager::saveVisitedLocation("Sketchy Building"); 
+    getKeyPress();
+    SaveManager::saveVisitedLocation("Sketchy Building");
     investigateNearbyRuins();
   } else {
     std::cout << "You leave the building before anything bad happens.\n";
     std::cout << "Press any key to continue...";
-    getKeyPress(); 
-    SaveManager::saveVisitedLocation("Sketchy Building"); 
+    getKeyPress();
+    SaveManager::saveVisitedLocation("Sketchy Building");
     investigateNearbyRuins();
   }
 }
@@ -243,17 +234,16 @@ void walkAroundRuins() {
   investigateNearbyRuins();
 }
 void abandonedLaboratory() {
-  
+
   SaveManager::loadVisitedLocations();
 
-  
   if (SaveManager::hasVisitedLocation("Abandoned Laboratory")) {
     std::cout << "You have already visited this laboratory. Nothing new to "
                  "explore here.\n";
     std::cout << "Press any key to return to the ruins...\n";
-    getKeyPress();            
+    getKeyPress();
     investigateNearbyRuins();
-    return;                  
+    return;
   }
 
   std::cout << std::endl;
@@ -262,32 +252,26 @@ void abandonedLaboratory() {
                                      "Inspect the locked safe",
                                      "Look for medical supplies"};
   int selected = 0;
-  bool optionSelected[numOptions] = {false, false,
-                                     false}; 
+  bool optionSelected[numOptions] = {false, false, false};
 
   while (true) {
     clearConsole();
     std::cout << "Inside the Abandoned Laboratory:\n";
 
- 
     for (int i = 0; i < numOptions; i++) {
       if (optionSelected[i]) {
-        std::cout << "  " << options[i] << " (Already done)"
-                  << std::endl; 
+        std::cout << "  " << options[i] << " (Already done)" << std::endl;
       } else {
         if (i == selected) {
-          std::cout << "> " << options[i] << " <"
-                    << std::endl; 
+          std::cout << "> " << options[i] << " <" << std::endl;
         } else {
-          std::cout << "  " << options[i]
-                    << std::endl; 
+          std::cout << "  " << options[i] << std::endl;
         }
       }
     }
 
     char input = getKeyPress();
 
-   
     if (input == 'w' || input == 'W') {
       do {
         selected = (selected - 1 + numOptions) % numOptions;
@@ -295,11 +279,10 @@ void abandonedLaboratory() {
     } else if (input == 's' || input == 'S') {
       do {
         selected = (selected + 1) % numOptions;
-      } while (optionSelected[selected]); 
+      } while (optionSelected[selected]);
     } else if (input == '\n' || input == '\r') {
       clearConsole();
 
-   
       if (selected == 0) {
         std::cout << "You rummage through the desks and find some old research "
                      "notes. Some of them mention strange experiments...\n";
@@ -309,7 +292,6 @@ void abandonedLaboratory() {
         SaveManager::money += 500;
         std::cout << "Your money is now: $" << SaveManager::money << "\n";
 
-      
         SaveManager::addItem("Mysterious Key", 1);
         std::cout << "You add the 'Mysterious Key' to your inventory.\n";
         SaveManager::saveGame("save.txt");
@@ -320,9 +302,8 @@ void abandonedLaboratory() {
         SaveManager::saveGame("save.txt");
       }
 
-      optionSelected[selected] = true; 
+      optionSelected[selected] = true;
 
-      
       bool allSelected = true;
       for (int i = 0; i < numOptions; i++) {
         if (!optionSelected[i]) {
@@ -332,19 +313,18 @@ void abandonedLaboratory() {
       }
 
       if (allSelected) {
-        break; 
+        break;
       }
 
       std::cout << "Press any key to continue...\n";
-      getKeyPress(); 
+      getKeyPress();
     }
   }
-
 
   SaveManager::saveVisitedLocation("Abandoned Laboratory");
 
   std::cout << "Press any key to return to the ruins...\n";
-  getKeyPress(); 
+  getKeyPress();
 
   investigateNearbyRuins();
 }
@@ -364,8 +344,7 @@ void investigateNearbyRuins() {
 
     for (int i = 0; i < numOptions; i++) {
       if (i == selected)
-        std::cout << "> " << options[i] << " <"
-                  << std::endl; 
+        std::cout << "> " << options[i] << " <" << std::endl;
       else
         std::cout << "  " << options[i] << std::endl;
     }
@@ -373,17 +352,14 @@ void investigateNearbyRuins() {
     char input = getKeyPress();
 
     if (input == 'w' || input == 'W') {
-      selected = (selected - 1 + numOptions) % numOptions; 
+      selected = (selected - 1 + numOptions) % numOptions;
     } else if (input == 's' || input == 'S') {
-      selected = (selected + 1) % numOptions; 
-    } else if (input == '\n' ||
-               input ==
-                   '\r') { 
-      break;               
+      selected = (selected + 1) % numOptions;
+    } else if (input == '\n' || input == '\r') {
+      break;
     }
   }
 
-  
   clearConsole();
   if (selected == 0) {
     exploreSketchyBuilding();
@@ -411,7 +387,7 @@ void vulturesCirclingScenario() {
 
     for (int i = 0; i < 2; ++i) {
       if (i == choice)
-        std::cout << "> " << options[i] << " <\n"; 
+        std::cout << "> " << options[i] << " <\n";
       else
         std::cout << options[i] << "\n";
     }
@@ -419,11 +395,11 @@ void vulturesCirclingScenario() {
     char key = getKeyPress();
 
     if (key == 'w' || key == 'W') {
-      choice = (choice == 0) ? 1 : 0; 
+      choice = (choice == 0) ? 1 : 0;
     } else if (key == 's' || key == 'S') {
-      choice = (choice == 1) ? 0 : 1; 
+      choice = (choice == 1) ? 0 : 1;
     } else if (key == 13 || key == '\n') {
-      selecting = false; 
+      selecting = false;
     }
   }
 
@@ -492,7 +468,7 @@ void showStartOfChapter1Menu(int &choice) {
 
   bool hasExploredLab = SaveManager::hasVisitedLocation("Abandoned Laboratory");
   bool hasExploredTempCamp = SaveManager::hasVisitedLocation("temporary camp");
- 
+
   std::string options[] = {"Survey the Landscape",
                            "Look for Signs of Life",
                            "Investigate the Nearby Ruins",
@@ -501,9 +477,9 @@ void showStartOfChapter1Menu(int &choice) {
                            "View Inventory",
                            "Follow the Road"};
 
-  for (int i = 0; i < 7; ++i) { 
+  for (int i = 0; i < 7; ++i) {
     if (i == choice)
-      std::cout << "> " << options[i] << " <\n"; 
+      std::cout << "> " << options[i] << " <\n";
     else
       std::cout << options[i] << "\n";
   }
@@ -517,14 +493,12 @@ void showStartOfChapter1Menu(int &choice) {
 void displaySearchCampMenu(int selected) {
   clearConsole();
 
-  std::cout
-      << "\033[1;34mYou are at the camp.\033[0m\n\n"; 
+  std::cout << "\033[1;34mYou are at the camp.\033[0m\n\n";
   std::string options[] = {"Loot the empty camp", "Put out the fire", "Leave"};
 
   for (int i = 0; i < 3; ++i) {
     if (i == selected)
-      std::cout << "\033[1;33m> " << options[i]
-                << "\033[0m\n";
+      std::cout << "\033[1;33m> " << options[i] << "\033[0m\n";
     else
       std::cout << "  " << options[i] << "\n";
   }
@@ -541,20 +515,19 @@ void searchCamp() {
     return;
   }
 
-  int choice = 0; 
+  int choice = 0;
   bool selecting = true;
 
   while (selecting) {
     displaySearchCampMenu(choice);
     char key = getKeyPress();
 
-  
     if (key == 'w' || key == 'W') {
-      choice = (choice == 0) ? 2 : choice - 1; 
+      choice = (choice == 0) ? 2 : choice - 1;
     } else if (key == 's' || key == 'S') {
-      choice = (choice == 2) ? 0 : choice + 1; 
-    } else if (key == '\n' || key == '\r') {   
-      selecting = false; 
+      choice = (choice == 2) ? 0 : choice + 1;
+    } else if (key == '\n' || key == '\r') {
+      selecting = false;
     }
   }
 
@@ -563,9 +536,9 @@ void searchCamp() {
     std::cout << "\nYou start looting the empty camp. You find a bottle of "
                  "Jack Daniels Whisky, and $400, sweet.\n";
     SaveManager::saveVisitedLocation("empty camp");
-    SaveManager::addItem("JDWhisky"); 
-    SaveManager::money += 400;       
-    SaveManager::saveGame("savetxt"); 
+    SaveManager::addItem("JDWhisky");
+    SaveManager::money += 400;
+    SaveManager::saveGame("savetxt");
     std::cout << "Press enter to continue... ";
     getKeyPress();
     emergeFromBunkerHandling();
@@ -597,7 +570,7 @@ void headTowardsSmokePlume() {
     std::cout << "Press any key to continue... ";
     getKeyPress();
     emergeFromBunkerHandling();
-    return; 
+    return;
   }
   clearConsole();
   std::cout << "You begin walking towards the distant plume of smoke, the air "
@@ -665,7 +638,7 @@ void goRight() {
         selection = (selection - 1 + numOptions) % numOptions;
       } else if (input == 's' || input == 'S') {
         selection = (selection + 1) % numOptions;
-      } else if (input == '\n' || input == ' ') { 
+      } else if (input == '\n' || input == ' ') {
         break;
       }
     }
@@ -738,7 +711,7 @@ void abandonedMilitaryCheckpoint() {
                "checkpoint. Deal?\"\n";
 
   while (selecting) {
-    clearConsole(); 
+    clearConsole();
     std::cout << "\n==== ABANDONED MILITARY CHECKPOINT ====\n";
     std::cout << (choice == 0 ? "> " : "  ")
               << "Trade Important_Files for $500 and passage\n";
@@ -751,8 +724,8 @@ void abandonedMilitaryCheckpoint() {
       choice = (choice == 0) ? 1 : 0;
     } else if (key == 's' || key == 'S') {
       choice = (choice == 1) ? 0 : 1;
-    } else if (key == '\n' || key == '\r') { 
-      if (choice == 0) {                     
+    } else if (key == '\n' || key == '\r') {
+      if (choice == 0) {
         if (SaveManager::hasItem("Important_Files")) {
           SaveManager::money += 500.0f;
           SaveManager::removeItem("Important_Files");
@@ -762,6 +735,7 @@ void abandonedMilitaryCheckpoint() {
           SaveManager::saveGame("save.txt");
           getKeyPress();
           chapter1Ending();
+          return;
         } else {
           std::cout << "\n\"Nice try, but you don't even have the files, I was "
                        "wrong.\" he "
@@ -809,7 +783,7 @@ void findSurvivor() {
       choice = (choice == 0) ? options.size() - 1 : choice - 1;
     } else if (key == 's' || key == 'S') {
       choice = (choice == options.size() - 1) ? 0 : choice + 1;
-    } else if (key == '\n' || key == '\r') { 
+    } else if (key == '\n' || key == '\r') {
       selecting = false;
     }
   }
@@ -861,7 +835,7 @@ void findSurvivor() {
     std::cout << "Press any key to continue...";
     getKeyPress();
     headingToRuinedCity();
-    
+
   } else if (choice == 1) {
     std::cout << "You find an old fire escape and climb up to a rooftop.\n";
     std::cout << "From here, you see movement in the distance-someone is out "
@@ -869,7 +843,7 @@ void findSurvivor() {
     std::cout << "Press any key to continue... ";
     getKeyPress();
     findSurvivor();
-    
+
   } else if (choice == 2) {
     std::cout << "You stay put and call out again...\n";
     std::cout
@@ -885,7 +859,7 @@ void findSurvivor() {
 }
 void yellOut() {
   clearConsole();
-  if (SaveManager::difficulty == 1) { 
+  if (SaveManager::difficulty == 1) {
     std::cout << "Silence.\n";
     std::cout << "Only the wind and distant creaks of collapsing buildings "
                  "answer you.\n";
@@ -918,7 +892,7 @@ void crumblingSkyscraper() {
     std::cout << "Dust and rubble crunch beneath your feet as you cautiously "
                  "make your way inside.\n\n";
 
-    if (SaveManager::difficulty == 1) { 
+    if (SaveManager::difficulty == 1) {
       std::cout << "The building creaks ominously, a chilling reminder of its "
                    "fragile state.\n";
       std::cout << "As you climb the shattered stairs, the floor suddenly "
@@ -929,7 +903,7 @@ void crumblingSkyscraper() {
       SaveManager::damage(40);
       std::cout << "You decide to turn back before the entire structure "
                    "collapses on you.\n";
-    } else if (SaveManager::difficulty == 2) { 
+    } else if (SaveManager::difficulty == 2) {
       std::cout << "Navigating the ruins, you find an old office space filled "
                    "with broken desks and shattered monitors.\n";
       std::cout << "You rummage through the debris and uncover a locked metal "
@@ -938,7 +912,7 @@ void crumblingSkyscraper() {
                    "someone in a trading hub could help?\n";
       SaveManager::addItem("Locked_Case");
       std::cout << "(You found a 'Locked_Case'!)\n";
-    } else { 
+    } else {
       std::cout << "The skyscraper still holds secrets from the past.\n";
       std::cout
           << "You find an executive's abandoned office, untouched by time.\n";
@@ -951,22 +925,19 @@ void crumblingSkyscraper() {
     std::cout << "\nPress any key to continue... ";
     SaveManager::saveGame("save.txt");
     getKeyPress();
-    headingToRuinedCity(); 
+    headingToRuinedCity();
   }
 }
 void spiritsMenu() {
   int choice = 0;
   bool inMenu = true;
 
- 
-  float prices[5] = {50.0f, 40.0f, 45.0f, 30.0f,
-                     60.0f}; 
-                             
+  float prices[5] = {50.0f, 40.0f, 45.0f, 30.0f, 60.0f};
+
   std::string options[6] = {
       "1. Jack Daniels Whisky", "2. Smirnoff", "3. Bacardi", "4. Malibu",
       "5. 1800 Tequila",        "6. Go back"};
 
-  
   std::string saveNames[5] = {"JDWhisky", "Smirnoff", "Bacardi", "Malibu",
                               "1800Tequila"};
 
@@ -974,49 +945,39 @@ void spiritsMenu() {
     clearConsole();
     std::cout << "\n==== Spirits Selection ====\n";
 
-   
     for (int i = 0; i < 6; i++) {
       if (i == choice) {
-        std::cout << "> " << options[i] << " - $" << prices[i]
-                  << " <\n"; 
+        std::cout << "> " << options[i] << " - $" << prices[i] << " <\n";
       } else {
         if (i < 5) {
-          std::cout << options[i] << " - $" << prices[i]
-                    << "\n"; 
+          std::cout << options[i] << " - $" << prices[i] << "\n";
         } else {
-          std::cout << options[i] << "\n"; 
+          std::cout << options[i] << "\n";
         }
       }
     }
 
-    std::cout << "\nCurrent money: $" << SaveManager::money
-              << "\n"; 
+    std::cout << "\nCurrent money: $" << SaveManager::money << "\n";
 
-    char key = getKeyPress(); 
+    char key = getKeyPress();
 
     if (key == 'w' || key == 'W') {
-      choice = (choice == 0) ? 5 : choice - 1; 
+      choice = (choice == 0) ? 5 : choice - 1;
     } else if (key == 's' || key == 'S') {
-      choice = (choice == 5) ? 0 : choice + 1; 
-    } else if (key == 10 || key == 13 || key == '\r' || key == '\n') { 
+      choice = (choice == 5) ? 0 : choice + 1;
+    } else if (key == 10 || key == 13 || key == '\r' || key == '\n') {
       if (choice == 5) {
-        SaveManager::saveGame(
-            "save.txt"); 
-        return;          
+        SaveManager::saveGame("save.txt");
+        return;
       }
 
-   
       if (SaveManager::money >= prices[choice]) {
-        std::cout << "You bought " << options[choice].substr(3)
-                  << "!\n";                  
-        SaveManager::money -= prices[choice]; 
-        SaveManager::money = std::max(
-            SaveManager::money, 0.0f); 
+        std::cout << "You bought " << options[choice].substr(3) << "!\n";
+        SaveManager::money -= prices[choice];
+        SaveManager::money = std::max(SaveManager::money, 0.0f);
 
-       
         SaveManager::addItem(saveNames[choice]);
 
-      
         SaveManager::saveGame("save.txt");
       } else {
         std::cout << "You don't have enough money to buy this item.\n";
@@ -1031,15 +992,12 @@ void beerMenu() {
   int choice = 0;
   bool inMenu = true;
 
-  
-  float prices[5] = {5.0f, 3.0f, 4.5f, 3.5f,
-                     4.0f}; 
-                          
+  float prices[5] = {5.0f, 3.0f, 4.5f, 3.5f, 4.0f};
+
   std::string options[6] = {"1. Heineken",  "2. Pabst Blue Ribbon (PBR)",
                             "3. Corona",    "4. Coors Light",
                             "5. Budweiser", "6. Go back"};
 
- 
   std::string saveNames[5] = {"Heineken", "PBRBeer", "Corona", "CoorsLight",
                               "Budweiser"};
 
@@ -1047,48 +1005,39 @@ void beerMenu() {
     clearConsole();
     std::cout << "\n==== Beer Selection ====\n";
 
-    
     for (int i = 0; i < 6; i++) {
       if (i == choice) {
-        std::cout << "> " << options[i] << " - $" << prices[i]
-                  << " <\n"; 
+        std::cout << "> " << options[i] << " - $" << prices[i] << " <\n";
       } else {
         if (i < 5) {
-          std::cout << options[i] << " - $" << prices[i]
-                    << "\n"; 
+          std::cout << options[i] << " - $" << prices[i] << "\n";
         } else {
-          std::cout << options[i] << "\n"; 
+          std::cout << options[i] << "\n";
         }
       }
     }
 
-    std::cout << "\nCurrent money: $" << SaveManager::money
-              << "\n"; 
+    std::cout << "\nCurrent money: $" << SaveManager::money << "\n";
 
-    char key = getKeyPress(); 
+    char key = getKeyPress();
 
     if (key == 'w' || key == 'W') {
-      choice = (choice == 0) ? 5 : choice - 1; 
+      choice = (choice == 0) ? 5 : choice - 1;
     } else if (key == 's' || key == 'S') {
-      choice = (choice == 5) ? 0 : choice + 1; 
-    } else if (key == 10 || key == 13 || key == '\r' || key == '\n') { 
+      choice = (choice == 5) ? 0 : choice + 1;
+    } else if (key == 10 || key == 13 || key == '\r' || key == '\n') {
       if (choice == 5) {
-        SaveManager::saveGame(
-            "save.txt"); 
-        return;          
+        SaveManager::saveGame("save.txt");
+        return;
       }
 
-      
       if (SaveManager::money >= prices[choice]) {
-        std::cout << "You bought " << options[choice].substr(3)
-                  << "!\n";                   
-        SaveManager::money -= prices[choice]; 
-        SaveManager::money = std::max(
-            SaveManager::money, 0.0f); 
+        std::cout << "You bought " << options[choice].substr(3) << "!\n";
+        SaveManager::money -= prices[choice];
+        SaveManager::money = std::max(SaveManager::money, 0.0f);
 
         SaveManager::addItem(saveNames[choice]);
 
-       
         SaveManager::saveGame("save.txt");
       } else {
         std::cout << "You don't have enough money to buy this item.\n";
@@ -1107,19 +1056,17 @@ void openLiquorStoreMenu() {
     std::cout << "\n==== Welcome to the Ashenfall Liquor Store ====\n";
     std::cout << "Please choose a category to browse:\n";
 
-   
     std::string options[3] = {"1. Beer", "2. Spirits", "3. Leave the store"};
 
     for (int i = 0; i < 3; i++) {
       if (i == choice) {
-        std::cout << "> " << options[i]
-                  << " <\n"; 
+        std::cout << "> " << options[i] << " <\n";
       } else {
         std::cout << options[i] << "\n";
       }
     }
 
-    char key = getKeyPress(); 
+    char key = getKeyPress();
 
     if (key == 'w' || key == 'W') {
       choice = (choice == 0) ? 2 : choice - 1;
@@ -1131,7 +1078,7 @@ void openLiquorStoreMenu() {
       } else if (choice == 1) {
         spiritsMenu();
       } else if (choice == 2) {
-        inMenu = false; 
+        inMenu = false;
         headingToRuinedCity();
       }
     }
@@ -1157,7 +1104,7 @@ void ashenfallLiquorStore() {
   std::cout << "\nPress any key to continue... ";
   getKeyPress();
 
-  openLiquorStoreMenu(); 
+  openLiquorStoreMenu();
 }
 void exploreAbandonedMall() {
   if (SaveManager::hasVisitedLocation("Abandoned mall")) {
@@ -1190,8 +1137,7 @@ void exploreAbandonedMall() {
         choice = (choice == 0) ? shops.size() - 1 : choice - 1;
       } else if (key == 's' || key == 'S') {
         choice = (choice == shops.size() - 1) ? 0 : choice + 1;
-      } else if (key == 10 || key == 13 || key == '\r' ||
-                 key == '\n') { 
+      } else if (key == 10 || key == 13 || key == '\r' || key == '\n') {
         clearConsole();
         std::cout << "\nSearching " << shops[choice] << "...\n";
 
@@ -1211,7 +1157,7 @@ void exploreAbandonedMall() {
         SaveManager::saveGame("save.txt");
         std::cout << "\nPress any key to continue...\n";
         getKeyPress();
-      } else if (key == 27) { 
+      } else if (key == 27) {
         exploring = false;
         headingToRuinedCity();
       }
@@ -1226,63 +1172,62 @@ void headingToRuinedCity() {
       "Explore the old mall",
       "Explore the run-down liquor store",
       "Go to the abandoned military checkpoint",
-      "View Inventory", 
+      "View Inventory",
       "Save and exit",
-      "Go Back (The man at the checkpoint might want something there...)" 
-  };
+      "Go Back (The man at the checkpoint might want something there...)"};
 
   int choice = 0;
   bool selecting = true;
 
   while (selecting) {
-      clearConsole();
-      std::cout << "\n==== RUINED CITY OPTIONS ====\n\n";
+    clearConsole();
+    std::cout << "\n==== RUINED CITY OPTIONS ====\n\n";
 
-      for (int i = 0; i < options.size(); i++) {
-          if (i == choice) {
-              std::cout << "> " << options[i] << " <\n";
-          } else {
-              std::cout << "  " << options[i] << "\n";
-          }
+    for (int i = 0; i < options.size(); i++) {
+      if (i == choice) {
+        std::cout << "> " << options[i] << " <\n";
+      } else {
+        std::cout << "  " << options[i] << "\n";
       }
+    }
 
-      std::cout << "\n[W/S to navigate, Enter to select]\n";
-      char key = getKeyPress();
+    std::cout << "\n[W/S to navigate, Enter to select]\n";
+    char key = getKeyPress();
 
-      if (key == 'w' || key == 'W') {
-          choice = (choice == 0) ? options.size() - 1 : choice - 1;
-      } else if (key == 's' || key == 'S') {
-          choice = (choice == options.size() - 1) ? 0 : choice + 1;
-      } else if (key == '\n' || key == '\r') { 
-          selecting = false;
-      }
+    if (key == 'w' || key == 'W') {
+      choice = (choice == 0) ? options.size() - 1 : choice - 1;
+    } else if (key == 's' || key == 'S') {
+      choice = (choice == options.size() - 1) ? 0 : choice + 1;
+    } else if (key == '\n' || key == '\r') {
+      selecting = false;
+    }
   }
 
   clearConsole();
   if (choice == 0) {
-      crumblingSkyscraper();
+    crumblingSkyscraper();
   } else if (choice == 1) {
-      yellOut();
+    yellOut();
   } else if (choice == 2) {
-      exploreAbandonedMall();
+    exploreAbandonedMall();
   } else if (choice == 3) {
-      ashenfallLiquorStore();
+    ashenfallLiquorStore();
   } else if (choice == 4) {
-      abandonedMilitaryCheckpoint();
+    abandonedMilitaryCheckpoint();
   } else if (choice == 5) {
-      std::cout << "\n==== YOUR INVENTORY ====\n";
-      SaveManager::displayInventory(); 
-                                  
-      std::cout << "\nPress any key to continue...";
-      getKeyPress();
-      headingToRuinedCity(); 
+    std::cout << "\n==== YOUR INVENTORY ====\n";
+    SaveManager::displayInventory();
+
+    std::cout << "\nPress any key to continue...";
+    getKeyPress();
+    headingToRuinedCity();
   } else if (choice == 6) {
-      std::cout << "Saving game...\n";
-      SaveManager::saveGame("save.txt");
-      std::cout << "Game saved. Exiting...\n";
-      exit(0);
-  } else if (choice == 7) { 
-      postApocalypse();
+    std::cout << "Saving game...\n";
+    SaveManager::saveGame("save.txt");
+    std::cout << "Game saved. Exiting...\n";
+    exit(0);
+  } else if (choice == 7) {
+    postApocalypse();
   }
 }
 void abandonedComputerLab() {
@@ -1316,13 +1261,12 @@ void abandonedComputerLab() {
       postApocalypse();
 
     } else {
-      std::cout
-          << "\nYou dont have the Encrypted Data Chip. You cannot unlock "
-             "the computer.\n";
+      std::cout << "\nYou dont have the Encrypted Data Chip. You cannot unlock "
+                   "the computer.\n";
       std::cout << "You turn back and return to the post-apocalyptic world.\n";
       std::cout << "Press any key to continue... ";
       getKeyPress();
-      postApocalypse(); 
+      postApocalypse();
     }
   }
 }
@@ -1330,7 +1274,8 @@ void postApocalypse() {
   SaveManager::updateLocation("FourWayCrossroad");
   SaveManager::saveGame("save.txt");
 
-  const char *options[] = {"Go straight", "Go right", "Go left", "Go back (you might need something to go left)"};
+  const char *options[] = {"Go straight", "Go right", "Go left",
+                           "Go back (you might need something to go left)"};
   int selection = 0;
   const int numOptions = 4;
 
@@ -1357,7 +1302,6 @@ void postApocalypse() {
     }
   }
 
-
   if (selection == 0) {
     headingToRuinedCity();
   } else if (selection == 1) {
@@ -1378,8 +1322,7 @@ void displayBunkerMenu(int selectedOption) {
 
   for (int i = 0; i < 3; i++) {
     if (i == selectedOption) {
-      std::cout << "> " << options[i] << " <"
-                << std::endl; 
+      std::cout << "> " << options[i] << " <" << std::endl;
     } else {
       std::cout << options[i] << std::endl;
     }
@@ -1389,7 +1332,7 @@ void insideBunkerMenu(int &selectedOption) {
   std::string bunkerOptions[] = {"Look for Treasures", "Exit Bunker"};
 
   while (true) {
-    clearConsole(); 
+    clearConsole();
     std::cout << "Inside the Bunker\n";
     std::cout << "Use 'w' to go up and 's' to go down.\n\n";
 
@@ -1401,7 +1344,7 @@ void insideBunkerMenu(int &selectedOption) {
       }
     }
 
-    char input = getKeyPress(); 
+    char input = getKeyPress();
 
     if (input == 'w' || input == 'W') {
       if (selectedOption > 0) {
@@ -1420,12 +1363,12 @@ void insideBunkerMenu(int &selectedOption) {
         SaveManager::addItem("Health_Potion", 2);
         SaveManager::saveGame("save.txt");
         std::cout << "Press any key to continue... ";
-        getKeyPress();  
+        getKeyPress();
         postApocalypse();
         break;
       } else if (selectedOption == 1) {
         std::cout << "You exit the bunker.\n";
-        postApocalypse(); 
+        postApocalypse();
         break;
       }
     }
@@ -1443,17 +1386,15 @@ void hiddenBunkerMenu() {
 
   while (selecting) {
     clearConsole();
-    displayBunkerMenu(
-        selectedOption);
+    displayBunkerMenu(selectedOption);
 
-    char input = getKeyPress(); 
+    char input = getKeyPress();
 
     if (input == 'w' || input == 'W') {
-      selectedOption =
-          (selectedOption == 0) ? 2 : selectedOption - 1; 
+      selectedOption = (selectedOption == 0) ? 2 : selectedOption - 1;
     } else if (input == 's' || input == 'S') {
       selectedOption = (selectedOption == 2) ? 0 : selectedOption + 1;
-    } else if (input == '\n' || input == '\r') { 
+    } else if (input == '\n' || input == '\r') {
       switch (selectedOption) {
       case 0:
         std::cout << "You enter the bunker.\n";
@@ -1466,7 +1407,7 @@ void hiddenBunkerMenu() {
         break;
       case 2:
         std::cout << "Exiting...\n";
-        selecting = false; 
+        selecting = false;
         break;
       }
     }
@@ -1504,7 +1445,6 @@ void followTheRoad() {
         << "\"I have something valuable for you, if you're willing to trade. "
            "Or perhaps, you'd rather hear about a hidden bunker?\"\n\n";
 
-   
     for (int i = 0; i < 4; ++i) {
       if (i == choice)
         std::cout << "> " << options[i] << " <\n";
@@ -1512,17 +1452,16 @@ void followTheRoad() {
         std::cout << "  " << options[i] << "\n";
     }
 
-    char key = getKeyPress(); 
+    char key = getKeyPress();
     if (key == 'w' || key == 'W') {
-      choice = (choice == 0) ? 3 : choice - 1; 
+      choice = (choice == 0) ? 3 : choice - 1;
     } else if (key == 's' || key == 'S') {
       choice = (choice == 3) ? 0 : choice + 1;
     } else if (key == 13 || key == '\n') {
-      selecting = false; 
+      selecting = false;
     }
   }
 
-  
   if (choice == 0) {
     std::cout << "\nYou trade some of your supplies for a rare item: a heavily "
                  "encrypted data chip.\n";
@@ -1633,16 +1572,14 @@ void emergeFromBunkerHandling() {
     showStartOfChapter1Menu(choice);
     char key = getKeyPress();
 
-    
     if (key == 'w' || key == 'W') {
-      choice = (choice == 0) ? 6 : choice - 1; 
+      choice = (choice == 0) ? 6 : choice - 1;
     } else if (key == 's' || key == 'S') {
-      choice = (choice == 6) ? 0 : choice + 1; 
+      choice = (choice == 6) ? 0 : choice + 1;
     } else if (key == 13 || key == '\n') {
-      selecting = false; 
+      selecting = false;
     }
   }
-
 
   if (choice == 0) {
     surveyLandscape();
@@ -1650,7 +1587,7 @@ void emergeFromBunkerHandling() {
     vulturesCirclingScenario();
   } else if (choice == 2) {
     if (SaveManager::hasVisitedLocation("Abandoned Laboratory")) {
-      emergeFromBunkerHandling(); 
+      emergeFromBunkerHandling();
     } else {
       investigateNearbyRuins();
     }
@@ -1659,13 +1596,13 @@ void emergeFromBunkerHandling() {
   } else if (choice == 4) {
     setupTemporaryCamp();
   } else if (choice == 5) {
-    SaveManager::displayInventory(); 
+    SaveManager::displayInventory();
     emergeFromBunkerHandling();
   } else if (choice == 6) {
     if (SaveManager::hasVisitedLocation("temporary camp")) {
       followTheRoad();
     } else {
-      emergeFromBunkerHandling(); 
+      emergeFromBunkerHandling();
     }
   }
 }
